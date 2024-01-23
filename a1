@@ -1,0 +1,22 @@
+Private Sub Worksheet_Change(ByVal Target As Range)
+    Dim KeyCells As Range
+    Set KeyCells = Range("B:B") ' Zakładając, że zmiany są w kolumnie B (w1)
+
+    If Not Application.Intersect(KeyCells, Range(Target.Address)) Is Nothing Then
+        Dim Answer As VbMsgBoxResult
+        Answer = MsgBox("Czy chcesz zapisać zmianę w komórce " & Target.Address & "?", vbYesNo + vbQuestion, "Potwierdzenie zmiany")
+
+        If Answer = vbYes Then
+            Dim ArchSheet As Worksheet
+            Set ArchSheet = ThisWorkbook.Sheets("A2")
+            Dim NextRow As Long
+            NextRow = ArchSheet.Cells(ArchSheet.Rows.Count, "A").End(xlUp).Row + 1
+
+            ArchSheet.Cells(NextRow, 1).Value = NextRow - 1 ' lp
+            ArchSheet.Cells(NextRow, 2).Value = Now ' DATA ZMIANY
+            ArchSheet.Cells(NextRow, 3).Value = Target.Value ' w1arch
+            
+            MsgBox "Zmiana zapisana.", vbInformation, "Informacja"
+        End If
+    End If
+End Sub
